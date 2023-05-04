@@ -14,15 +14,28 @@ class LocalDataSourceImpl implements LocalDataSource {
   LocalDataSourceImpl(this.db);
 
   @override
-  Future<List<NewsEntity>> getNews() {
-    // TODO: implement getNews
-    throw UnimplementedError();
+  Future<List<NewsEntity>> getNews() async {
+    final news = await db.rawQuery("SELECT * FROM news");
+
+    if (news.isNotEmpty) {
+      return news.map((row) => NewsEntity.fromSql(row)).toList();
+    } else {
+      throw Exception("There are no news");
+    }
   }
 
   @override
-  Future<UserEntity> getUser() {
-    // TODO: implement getUser
-    throw UnimplementedError();
+  Future<UserEntity> getUser() async {
+    // TODO: add name argument
+    String name = "Maksimus";
+    
+    final user = await db.rawQuery("SELECT name, score, gender, birthday FROM users WHERE name = '$name");
+
+    if (user.isNotEmpty) {
+      return UserEntity.fromSql(user.first);
+    } else {
+      throw Exception("User not found");
+    }
   }
 
 }
