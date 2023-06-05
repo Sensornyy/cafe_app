@@ -10,4 +10,13 @@ class UserEntity {
     required this.gender,
     required this.birthday,
   });
+
+  factory UserEntity.fromSql(Map<String, dynamic> map) {
+    return UserEntity(
+      name: map['name'] as String,
+      score: map['score'] as int,
+      gender: map['gender'] as String,
+      birthday: DateTime.parse(map['birthday'] as String),
+    );
+  }
 }
