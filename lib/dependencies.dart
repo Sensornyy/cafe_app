@@ -1,3 +1,5 @@
+import 'package:cafe_app/data/sources/remote_data_source.dart';
+import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -8,7 +10,6 @@ import 'package:cafe_app/domain/repository/repository.dart';
 import 'package:cafe_app/domain/use_cases/get_news_use_case.dart';
 import 'package:cafe_app/domain/use_cases/get_user_use_case.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> init() async {
@@ -16,13 +17,17 @@ Future<void> init() async {
 
   sl.registerLazySingleton(() => GetUserUseCase(sl()));
 
+  sl.registerLazySingleton(() => Dio());
+
   sl.registerLazySingleton<Repository>(
-    () => RepositoryImpl(sl()),
+    () => RepositoryImpl(sl(), sl()),
   );
 
   sl.registerLazySingleton<LocalDataSource>(
     () => LocalDataSourceImpl(sl()),
   );
+
+  sl.registerLazySingleton<RemoteDataSource>(() => RemoteDataSourceImpl(sl()));
 
   //TODO: create 2 databases for user and news, use the code below as an example
   //TODO: add mock data to databases
@@ -41,9 +46,9 @@ Future<void> init() async {
   var databasesPath = await getDatabasesPath();
   String path = join(databasesPath, 'cafe_app.db');
 
-  Database database = await openDatabase(path, version: 1,
-      onCreate: (Database db, int version) async {
-        await db.execute('''
+  Database database =
+      await openDatabase(path, version: 1, onCreate: (Database db, int version) async {
+    await db.execute('''
         CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         name VARCHAR(50), 
@@ -51,7 +56,7 @@ Future<void> init() async {
         gender VARCHAR(6), 
         birthday TEXT));''');
 
-        await db.execute('''
+    await db.execute('''
         CREATE TABLE IF NOT EXISTS news(
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         title VARCHAR(100), 
@@ -59,5 +64,4 @@ Future<void> init() async {
   });
 
   sl.registerSingletonAsync<Database>(() async => database);
-
 }
