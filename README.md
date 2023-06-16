@@ -53,4 +53,6 @@
 **[Беклог](https://docs.google.com/document/d/14ZoKQlzp6kosGLKAR1TtDPul6NPT8Zlr/edit)**
 **[Канбан](https://miro.com/app/board/uXjVMN1X5HI=/?share_link_id=94272325112)**
 
-**Автори проєкта: Коряк Максим та Лужаньский Георгій**
+**Автори проєкта: Коряк Максим та Лужаньский Георгій, студенти групи УП-211**
+
+Посилання на проект з **[серверною частиною](https://github.com/Z1ksS/CafeApp-WebAPI/tree/master)**
